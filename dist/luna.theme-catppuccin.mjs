@@ -1,4 +1,4 @@
-var b=Object.create;var i=Object.defineProperty;var g=Object.getOwnPropertyDescriptor;var _=Object.getOwnPropertyNames;var v=Object.getPrototypeOf,f=Object.prototype.hasOwnProperty;var s=(r,a)=>()=>(a||r((a={exports:{}}).exports,a),a.exports);var h=(r,a,o,n)=>{if(a&&typeof a=="object"||typeof a=="function")for(let t of _(a))!f.call(r,t)&&t!==o&&i(r,t,{get:()=>a[t],enumerable:!(n=g(a,t))||n.enumerable});return r};var l=(r,a,o)=>(o=r!=null?b(v(r)):{},h(a||!r||!r.__esModule?i(o,"default",{value:r,enumerable:!0}):o,r));var p=s((B,e)=>{e.exports=luna?.core?.modules?.["@luna/core"];if(e.exports===void 0)throw new Error("Cannot find module @luna/core in luna.core.modules");luna.core.LunaPlugin.plugins["@luna/core"]?.addDependant(luna.core.LunaPlugin.plugins["@luna/theme-catppuccin"])});var d=s((L,c)=>{c.exports=luna?.core?.modules?.["@luna/lib"];if(c.exports===void 0)throw new Error("Cannot find module @luna/lib in luna.core.modules");luna.core.LunaPlugin.plugins["@luna/lib"]?.addDependant(luna.core.LunaPlugin.plugins["@luna/theme-catppuccin"])});var u=l(p(),1),m=l(d(),1),{trace:x}=(0,u.Tracer)("[ThemeCatppuccin]"),w=new Set,k=`
+var b=Object.create;var s=Object.defineProperty;var _=Object.getOwnPropertyDescriptor;var g=Object.getOwnPropertyNames;var h=Object.getPrototypeOf,v=Object.prototype.hasOwnProperty;var l=(r,a)=>()=>(a||r((a={exports:{}}).exports,a),a.exports);var f=(r,a,o,c)=>{if(a&&typeof a=="object"||typeof a=="function")for(let e of g(a))!v.call(r,e)&&e!==o&&s(r,e,{get:()=>a[e],enumerable:!(c=_(a,e))||c.enumerable});return r};var i=(r,a,o)=>(o=r!=null?b(h(r)):{},f(a||!r||!r.__esModule?s(o,"default",{value:r,enumerable:!0}):o,r));var p=l((L,t)=>{t.exports=luna?.core?.modules?.["@luna/core"];if(t.exports===void 0)throw new Error("Cannot find module @luna/core in luna.core.modules");luna.core.LunaPlugin.plugins["@luna/core"]?.addDependant(luna.core.LunaPlugin.plugins["@luna/theme-catppuccin"])});var u=l((P,n)=>{n.exports=luna?.core?.modules?.["@luna/lib"];if(n.exports===void 0)throw new Error("Cannot find module @luna/lib in luna.core.modules");luna.core.LunaPlugin.plugins["@luna/lib"]?.addDependant(luna.core.LunaPlugin.plugins["@luna/theme-catppuccin"])});var d=i(p(),1),m=i(u(),1),{trace:x}=(0,d.Tracer)("[ThemeCatppuccin]"),y=new Set,k=`
 :root {
     --ctp-base: #1e1e2e;
     --ctp-mantle: #181825;
@@ -8,50 +8,48 @@ var b=Object.create;var i=Object.defineProperty;var g=Object.getOwnPropertyDescr
     --ctp-blue: #89b4fa;
     --ctp-surface0: #313244;
     --ctp-surface1: #45475a;
-    --ctp-surface2: #585b70;
 
     /* Global Tidal variable overrides */
     --wave-color-solid-background-primary: var(--ctp-base) !important;
     --wave-color-solid-background-secondary: var(--ctp-mantle) !important;
-    --wave-color-solid-background-tertiary: var(--ctp-crust) !important;
     --wave-color-opacity-background-primary: var(--ctp-base) !important;
 }
 
 /* 1. Global Backgrounds */
 html, body, #wimp, #main, [class*="_mainContainer_"], [class*="_background_"] {
     background-color: var(--ctp-base) !important;
-    background-image: none !important;
 }
 
-/* 2. Sidebar & Sidebar Header (Tidal Icon Area) */
-aside#sidebar, [class*="_sidebar_"], [class*="_fixedNavigation_"] {
+/* 2. Sidebar Refinement */
+aside#sidebar, [class*="_sidebar_"], [class*="_header_82e98d0"] {
     background-color: var(--ctp-mantle) !important;
+    border-right: 1px solid var(--ctp-surface0) !important;
 }
-/* Spezifischer Fix f\xFCr den Bereich oben links beim Logo */
 [class*="_header_82e98d0"], [class*="_logoButton_"] {
-    background-color: var(--ctp-mantle) !important;
-    border-bottom: none !important; /* Entfernt die Linie unter dem Logo */
+    border-bottom: none !important;
 }
 
-/* 3. Top Navigation Bar (Back/Forward Buttons) */
-#mainHeader, [class*="_header_3fe665f"], [class*="_container_cb5cbe4"] {
+/* 3. Header & Navigation Fixes (The "Double Line" issue) */
+#mainHeader, [class*="_header_3fe665f"], [class*="_solidHeader_"] {
     background-color: var(--ctp-base) !important;
-    border-bottom: 1px solid var(--ctp-surface0) !important; /* Mocha Border statt Schwarz */
+    border-bottom: 1px solid var(--ctp-surface0) !important; /* This is the bottom line that stays */
 }
 
-/* 4. Music Page - Shortcuts (Rewind 2025, etc.) */
+/* Removes the inner line directly under search/arrows */
+[class*="_container_cb5cbe4"] {
+    border-bottom: none !important;
+    background-color: transparent !important;
+}
+
+/* 4. Music Page - Shortcuts */
 [class*="_shortcutItem_"] {
     background-color: var(--ctp-surface0) !important;
     border-radius: 12px !important;
-}
-[class*="_shortcutItem_"] div {
-    color: var(--ctp-text) !important;
 }
 
 /* 5. Playlists & List Headers */
 [class*="_sectionHeader_"], [class*="_container_bfc088f"] {
     background-color: var(--ctp-mantle) !important;
-    border-bottom: 1px solid var(--ctp-surface0) !important;
 }
 
 /* 6. Footer Player Bar */
@@ -60,32 +58,25 @@ footer, #footerPlayer, [class*="_player_"], [class*="_playerBar_"] {
     border-top: 1px solid var(--ctp-surface0) !important;
 }
 
-/* 7. Text & Borders Fix */
-h1, h2, h3, h4, h5, span, div, a, p {
+/* 7. General Elements */
+* {
+    box-shadow: none !important;
+}
+h1, h2, h3, h4, span, div, a, p {
     color: var(--ctp-text);
 }
-[class*="_secondary_"], [class*="_subTitle_"], [class*="_description_"] {
+[class*="_secondary_"], [class*="_subTitle_"] {
     color: var(--ctp-subtext0) !important;
 }
 
-/* Global Shadow & Border Reset */
-* {
-    box-shadow: none !important;
-    border-color: var(--ctp-surface0) !important;
-}
-
-/* 8. Now Playing View */
-#nowPlaying, [data-test="now-playing"] {
-    background-color: var(--ctp-base) !important;
-    background-image: none !important;
-}
-
-/* 9. Search & Inputs */
-[class*="_searchField_"], input {
-    background-color: var(--ctp-surface0) !important;
-    border: 1px solid var(--ctp-surface1) !important;
-    color: var(--ctp-text) !important;
+/* Search Bar Styling */
+[class*="_searchField_"] {
+    background-color: var(--ctp-mantle) !important;
+    border: 1px solid var(--ctp-surface0) !important;
     border-radius: 8px !important;
 }
-`;new m.StyleTag("catppuccin-mocha-theme-v4",w,k);x.msg.log("Catppuccin Mocha v1.6.7: UI Refinements Applied!");export{x as trace,w as unloads};
+input {
+    color: var(--ctp-text) !important;
+}
+`;new m.StyleTag("catppuccin-mocha-theme-v5",y,k);x.msg.log("Catppuccin Mocha v1.6.8: Header Line Cleanup Applied!");export{x as trace,y as unloads};
 //# sourceMappingURL=luna.theme-catppuccin.mjs.map
