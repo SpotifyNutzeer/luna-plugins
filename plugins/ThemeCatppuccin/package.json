@@ -1,0 +1,10 @@
+{
+	"name": "@luna/theme-catppuccin",
+	"description": "Elegant Catppuccin Mocha theme for Tidal",
+	"author": {
+		"name": "SpotifyNutzer",
+		"url": "https://github.com/SpotifyNutzeer"
+	},
+	"main": "./src/index.ts",
+	"type": "module"
+}
