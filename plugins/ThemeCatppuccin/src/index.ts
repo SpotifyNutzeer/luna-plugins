@@ -6,7 +6,6 @@ export const unloads = new Set<LunaUnload>();
 
 const catppuccinMochaCss = `
 :root {
-    /* Catppuccin Mocha Palette */
     --ctp-rosewater: #f5e0dc;
     --ctp-flamingo: #f2cdcd;
     --ctp-pink: #f5c2e7;
@@ -34,95 +33,69 @@ const catppuccinMochaCss = `
     --ctp-mantle: #181825;
     --ctp-crust: #11111b;
 
-    /* Override Tidal Market Core Variables */
-    --market-core-surface-5-color: var(--ctp-crust) !important;
-    --market-core-surface-10-color: var(--ctp-base) !important;
-    --market-core-surface-20-color: var(--ctp-mantle) !important;
-    --market-core-surface-30-color: var(--ctp-surface0) !important;
-    
-    --market-core-text-10-color: var(--ctp-text) !important;
-    --market-core-text-20-color: var(--ctp-subtext1) !important;
-    --market-core-text-30-color: var(--ctp-subtext0) !important;
-    
-    --market-core-emphasis-fill-color: var(--ctp-blue) !important;
-    --market-core-focus-color: var(--ctp-lavender) !important;
-    --market-core-divider-20-color: var(--ctp-surface0) !important;
-
-    /* Wave Design System Overrides */
+    /* Global Tidal variable overrides */
     --wave-color-solid-background-primary: var(--ctp-base) !important;
     --wave-color-solid-background-secondary: var(--ctp-mantle) !important;
     --wave-color-solid-background-tertiary: var(--ctp-crust) !important;
-    --wave-color-solid-foreground-primary: var(--ctp-text) !important;
-    --wave-color-solid-foreground-secondary: var(--ctp-subtext1) !important;
-    --wave-color-solid-accent-primary: var(--ctp-blue) !important;
-    
-    /* UI Element Overrides */
-    --market-button-normal-variant-primary-rank-normal-state-background-color: var(--ctp-blue) !important;
-    --market-button-normal-variant-primary-rank-normal-state-label-color: var(--ctp-base) !important;
-    --market-button-normal-variant-secondary-rank-normal-state-background-color: var(--ctp-surface0) !important;
-    
-    --market-tabbar-background-color: var(--ctp-crust) !important;
-    --market-tabbar-item-selected-value-normal-state-content-color: var(--ctp-blue) !important;
+    --wave-color-opacity-background-primary: var(--ctp-base) !important;
 }
 
-/* Global Fixes */
+/* Force backgrounds on main structural elements */
 html, body, #wimp, #main, [class*="_mainContainer_"], [class*="_background_"] {
     background-color: var(--ctp-base) !important;
-    background-image: none !important;
-    color: var(--ctp-text) !important;
 }
 
-/* Sidebar Specific */
-aside#sidebar, [class*="_sidebar_"], [class*="_fixedNavigation_"] {
+/* Fix for the Top Header / Nav bar (The black bar you mentioned) */
+header, [class*="_header_"], #mainHeader, [class*="_solidHeader_"], [class*="_container_cb5cbe4"] {
+    background-color: var(--ctp-base) !important;
+    border-bottom: 1px solid var(--ctp-surface0) !important;
+}
+
+/* Sidebar fixes including the area above "All Playlists" */
+aside#sidebar, [class*="_sidebar_"], [class*="_fixedNavigation_"], [class*="_sectionHeader_"] {
+    background-color: var(--ctp-mantle) !important;
+    background-image: none !important;
+}
+
+/* Fix for the area over "all playlists" button specifically */
+[class*="_container_bfc088f"] {
     background-color: var(--ctp-mantle) !important;
 }
 
-/* Footer Player */
-#footerPlayer, [class*="_player_"], [class*="_playerBar_"] {
+/* Footer Player Bar */
+footer, #footerPlayer, [class*="_player_"], [class*="_playerBar_"] {
     background-color: var(--ctp-crust) !important;
+    border-top: 1px solid var(--ctp-surface0) !important;
 }
 
-/* Now Playing View & Gradients Fix */
-#nowPlaying, [data-test="now-playing"], [class*="_nowPlayingContainer_"] {
+/* Text & Icons */
+* {
+    border-color: var(--ctp-surface0) !important;
+}
+h1, h2, h3, h4, span, div, a, p {
+    color: var(--ctp-text);
+}
+[class*="_secondary_"], [class*="_subTitle_"] {
+    color: var(--ctp-subtext0) !important;
+}
+
+/* Remove any remaining shadows that look like black spots */
+* {
+    box-shadow: none !important;
+}
+
+/* Now Playing View */
+#nowPlaying, [data-test="now-playing"] {
     background-color: var(--ctp-base) !important;
     background-image: none !important;
 }
 
-/* Scrollbars */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: var(--ctp-crust); }
-::-webkit-scrollbar-thumb { background: var(--ctp-surface1); border-radius: 5px; }
-::-webkit-scrollbar-thumb:hover { background: var(--ctp-surface2); }
-
-/* Context Menus */
-[data-test="contextmenu"], [class*="_contextMenu_"], [class*="_subMenu_"] {
+/* Search bar area */
+[class*="_searchField_"], input {
     background-color: var(--ctp-surface0) !important;
-    border: 1px solid var(--ctp-surface1) !important;
-}
-
-/* Cards & Rows */
-[class*="_card_"], [class*="_rowContainer_"], [class*="_actionItem_"] {
-    background-color: transparent !important;
-}
-[class*="_rowContainer_"]:hover, [class*="_actionItem_"]:hover {
-    background-color: var(--ctp-surface0) !important;
-}
-
-/* Active/Selected states */
-[class*="_selected_"], [class*="_activeTab_"] {
-    color: var(--ctp-blue) !important;
-    border-bottom-color: var(--ctp-blue) !important;
-}
-
-/* Search Bar */
-[class*="_searchField_"] {
-    background-color: var(--ctp-mantle) !important;
-    border-radius: 8px !important;
-}
-input {
     color: var(--ctp-text) !important;
 }
 `;
 
-new StyleTag("catppuccin-mocha-theme-v2", unloads, catppuccinMochaCss);
-trace.msg.log("Catppuccin Mocha Engine Overwrite Applied!");
+new StyleTag("catppuccin-mocha-theme-v3", unloads, catppuccinMochaCss);
+trace.msg.log("Catppuccin Mocha v1.6.6: Header & Sidebar Fixes applied!");
