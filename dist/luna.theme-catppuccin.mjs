@@ -1,10 +1,4 @@
-import { LunaUnload, Tracer } from "@luna/core";
-import { StyleTag } from "@luna/lib";
-
-export const { trace } = Tracer("[ThemeCatppuccin]");
-export const unloads = new Set<LunaUnload>();
-
-const catppuccinMochaCss = `
+var m=Object.create;var l=Object.defineProperty;var g=Object.getOwnPropertyDescriptor;var v=Object.getOwnPropertyNames;var _=Object.getPrototypeOf,x=Object.prototype.hasOwnProperty;var s=(r,a)=>()=>(a||r((a={exports:{}}).exports,a),a.exports);var f=(r,a,t,n)=>{if(a&&typeof a=="object"||typeof a=="function")for(let o of v(a))!x.call(r,o)&&o!==t&&l(r,o,{get:()=>a[o],enumerable:!(n=g(a,o))||n.enumerable});return r};var p=(r,a,t)=>(t=r!=null?m(_(r)):{},f(a||!r||!r.__esModule?l(t,"default",{value:r,enumerable:!0}):t,r));var u=s((C,e)=>{e.exports=luna?.core?.modules?.["@luna/core"];if(e.exports===void 0)throw new Error("Cannot find module @luna/core in luna.core.modules");luna.core.LunaPlugin.plugins["@luna/core"]?.addDependant(luna.core.LunaPlugin.plugins["@luna/theme-catppuccin"])});var i=s((S,c)=>{c.exports=luna?.core?.modules?.["@luna/lib"];if(c.exports===void 0)throw new Error("Cannot find module @luna/lib in luna.core.modules");luna.core.LunaPlugin.plugins["@luna/lib"]?.addDependant(luna.core.LunaPlugin.plugins["@luna/theme-catppuccin"])});var d=p(u(),1),b=p(i(),1),{trace:h}=(0,d.Tracer)("[ThemeCatppuccin]"),k=new Set,w=`
 :root {
     --ctp-base: #1e1e2e;
     --ctp-mantle: #181825;
@@ -84,7 +78,5 @@ button[class*="_primary_"], [class*="_active_"] {
 div[style*="radial-gradient"] {
     background: var(--ctp-base) !important;
 }
-`;
-
-new StyleTag("catppuccin-mocha-theme", unloads, catppuccinMochaCss);
-trace.msg.log("Catppuccin Mocha Clean Theme applied!");
+`;new b.StyleTag("catppuccin-mocha-theme",k,w);h.msg.log("Catppuccin Mocha Clean Theme applied!");export{h as trace,k as unloads};
+//# sourceMappingURL=luna.theme-catppuccin.mjs.map
