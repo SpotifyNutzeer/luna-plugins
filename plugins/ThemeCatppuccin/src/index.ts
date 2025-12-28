@@ -33,94 +33,126 @@ const catppuccinMochaCss = `
     --ctp-mantle: #181825;
     --ctp-crust: #11111b;
 
-    /* Tidal specific variable overrides if they use them */
+    /* Global Tidal variable overrides */
     --wave-color-solid-background-primary: var(--ctp-base);
     --wave-color-solid-background-secondary: var(--ctp-mantle);
+    --wave-color-solid-background-tertiary: var(--ctp-crust);
+    
     --wave-color-solid-foreground-primary: var(--ctp-text);
+    --wave-color-solid-foreground-secondary: var(--ctp-subtext0);
+    --wave-color-solid-foreground-tertiary: var(--ctp-overlay2);
+    
     --wave-color-opacity-background-primary: rgba(30, 30, 46, 0.8);
+    --wave-color-opacity-background-secondary: rgba(24, 24, 37, 0.8);
+    
+    --wave-color-solid-accent-primary: var(--ctp-blue);
+    --wave-color-solid-accent-secondary: var(--ctp-sapphire);
+    
+    --wave-color-opacity-accent-primary: rgba(137, 180, 250, 0.2);
+    
+    --wave-color-solid-neutral-primary: var(--ctp-surface0);
+    --wave-color-solid-neutral-secondary: var(--ctp-surface1);
 }
 
-/* Backgrounds */
-body, 
-[class*="mainContainer"], 
-[class*="background"], 
-[class*="contentWrapper"],
-#main {
+/* Force dark background everywhere */
+body, #main, [id="root"], [class*="mainContainer"], [class*="background"], [class*="contentWrapper"] {
     background-color: var(--ctp-base) !important;
     color: var(--ctp-text) !important;
 }
 
-/* Sidebar & Navigation */
-[class*="leftColumn"], 
-[class*="sidebar"], 
-[class*="nav"],
-nav {
+/* Sidebar & Navigation Fixes */
+[class*="sidebar"], [class*="leftColumn"], [class*="nav"], nav, [class*="_bar_"] {
     background-color: var(--ctp-mantle) !important;
 }
 
-/* Player Bar */
-[class*="playerBar"], 
-footer, 
-[class*="playbackControls"] {
+/* Player Bar Fixes */
+[class*="playerBar"], footer, [class*="playbackControls"], [class*="_bar_"] {
     background-color: var(--ctp-crust) !important;
-    border-top: 1px solid var(--ctp-surface0) !important;
+    border-color: var(--ctp-surface0) !important;
 }
 
-/* Text Colors */
-h1, h2, h3, h4, h5, span, a, div {
+/* Text & Title Overrides */
+h1, h2, h3, h4, h5, h6, 
+[class*="title"], [class*="header"], 
+[class*="itemName"], [class*="artistName"],
+span, div, a {
     color: var(--ctp-text);
 }
 
-[class*="secondary"], [class*="artistName"], [class*="description"] {
+/* Secondary/Dimmed Text */
+[class*="secondary"], [class*="subtitle"], [class*="description"], [class*="meta"], [class*="duration"] {
     color: var(--ctp-subtext0) !important;
 }
 
-/* Links & Active States */
-a:hover, [class*="active"] {
-    color: var(--ctp-blue) !important;
+/* List Items & Rows */
+[class*="row"], [class*="item"], [role="row"], [role="listitem"] {
+    border-bottom-color: var(--ctp-surface0) !important;
+}
+[class*="row"]:hover, [class*="item"]:hover, [class*="_active_"] {
+    background-color: var(--ctp-surface0) !important;
 }
 
 /* Buttons */
-button[class*="primary"], [class*="button"]._active_ {
+button, [role="button"] {
+    color: var(--ctp-text);
+}
+button[class*="primary"], [class*="button"]._active_, [class*="playButton"] {
     background-color: var(--ctp-blue) !important;
     color: var(--ctp-base) !important;
 }
 
-/* Inputs & Surfaces */
-input, select, textarea {
+/* Context Menus & Dropdowns */
+[class*="contextMenu"], [class*="dropdown"], [class*="popup"], [class*="menu"], [data-test="contextmenu"] {
     background-color: var(--ctp-surface0) !important;
-    color: var(--ctp-text) !important;
     border: 1px solid var(--ctp-surface1) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+}
+[class*="actionItem"], [class*="menuItem"], [data-type="contextmenu-item"] {
+    background-color: transparent !important;
+}
+[class*="actionItem"]:hover, [class*="menuItem"]:hover, [data-type="contextmenu-item"]:hover {
+    background-color: var(--ctp-surface1) !important;
 }
 
-/* Playback Progress Bar */
-[class*="progressBar"] [class*="progress"] {
+/* Progress Bars & Sliders */
+[class*="progressBar"], [class*="slider"] {
+    background-color: var(--ctp-surface0) !important;
+}
+[class*="progress"], [class*="track"] {
     background-color: var(--ctp-blue) !important;
 }
 
-/* Context Menus */
-[class*="contextMenu"], [class*="dropdown"] {
-    background-color: var(--ctp-surface0) !important;
-    border: 1px solid var(--ctp-surface1) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+/* Icons */
+svg, [class*="icon"] {
+    fill: currentColor;
 }
 
-/* Scrollbars */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 12px;
+    height: 12px;
 }
 ::-webkit-scrollbar-track {
-    background: var(--ctp-mantle);
+    background: var(--ctp-crust);
 }
 ::-webkit-scrollbar-thumb {
     background: var(--ctp-surface1);
-    border-radius: 5px;
+    border: 3px solid var(--ctp-crust);
+    border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: var(--ctp-surface2);
+}
+
+/* Inputs */
+input[type="text"], input[type="search"], textarea {
+    background-color: var(--ctp-mantle) !important;
+    border: 1px solid var(--ctp-surface0) !important;
+    color: var(--ctp-text) !important;
+    border-radius: 8px !important;
 }
 `;
 
 new StyleTag("catppuccin-mocha-theme", unloads, catppuccinMochaCss);
 
-trace.msg.log("Catppuccin Mocha theme applied!");
+trace.msg.log("Catppuccin Mocha theme applied successfully!");
