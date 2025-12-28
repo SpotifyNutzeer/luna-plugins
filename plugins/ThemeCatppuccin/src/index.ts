@@ -5,7 +5,8 @@ export const { trace } = Tracer("[ThemeCatppuccin]");
 export const unloads = new Set<LunaUnload>();
 
 const catppuccinMochaCss = `
-:root, html, body {
+:root {
+    /* Catppuccin Mocha Palette */
     --ctp-rosewater: #f5e0dc;
     --ctp-flamingo: #f2cdcd;
     --ctp-pink: #f5c2e7;
@@ -33,60 +34,58 @@ const catppuccinMochaCss = `
     --ctp-mantle: #181825;
     --ctp-crust: #11111b;
 
-    /* Deep Overrides for Tidal Wave Design System */
+    /* Override Tidal Market Core Variables */
+    --market-core-surface-5-color: var(--ctp-crust) !important;
+    --market-core-surface-10-color: var(--ctp-base) !important;
+    --market-core-surface-20-color: var(--ctp-mantle) !important;
+    --market-core-surface-30-color: var(--ctp-surface0) !important;
+    
+    --market-core-text-10-color: var(--ctp-text) !important;
+    --market-core-text-20-color: var(--ctp-subtext1) !important;
+    --market-core-text-30-color: var(--ctp-subtext0) !important;
+    
+    --market-core-emphasis-fill-color: var(--ctp-blue) !important;
+    --market-core-focus-color: var(--ctp-lavender) !important;
+    --market-core-divider-20-color: var(--ctp-surface0) !important;
+
+    /* Wave Design System Overrides */
     --wave-color-solid-background-primary: var(--ctp-base) !important;
     --wave-color-solid-background-secondary: var(--ctp-mantle) !important;
     --wave-color-solid-background-tertiary: var(--ctp-crust) !important;
-    
     --wave-color-solid-foreground-primary: var(--ctp-text) !important;
-    --wave-color-solid-foreground-secondary: var(--ctp-subtext0) !important;
-    
+    --wave-color-solid-foreground-secondary: var(--ctp-subtext1) !important;
     --wave-color-solid-accent-primary: var(--ctp-blue) !important;
-    --wave-color-solid-accent-secondary: var(--ctp-sapphire) !important;
     
-    --wave-color-opacity-background-primary: var(--ctp-base) !important;
-    --wave-color-solid-neutral-primary: var(--ctp-surface0) !important;
+    /* UI Element Overrides */
+    --market-button-normal-variant-primary-rank-normal-state-background-color: var(--ctp-blue) !important;
+    --market-button-normal-variant-primary-rank-normal-state-label-color: var(--ctp-base) !important;
+    --market-button-normal-variant-secondary-rank-normal-state-background-color: var(--ctp-surface0) !important;
+    
+    --market-tabbar-background-color: var(--ctp-crust) !important;
+    --market-tabbar-item-selected-value-normal-state-content-color: var(--ctp-blue) !important;
 }
 
-/* Fix for Now Playing and Main Background */
-#root, #main, body, [class*="mainContainer"], [class*="background"], [data-test="now-playing-view"] {
+/* Global Fixes */
+html, body, #wimp, #main, [class*="_mainContainer_"], [class*="_background_"] {
     background-color: var(--ctp-base) !important;
     background-image: none !important;
-}
-
-/* Sidebar Fixes */
-[class*="sidebar"], [class*="leftColumn"], nav, [class*="_bar_"] {
-    background-color: var(--ctp-mantle) !important;
-}
-
-/* Player Bar Fixes */
-footer, [class*="playerBar"], [class*="playbackControls"] {
-    background-color: var(--ctp-crust) !important;
-}
-
-/* Card & List Fixes (The grey/brown areas from screenshot) */
-[class*="card"], [class*="item"], [class*="row"], [class*="section"], [class*="container"] {
-    background-color: var(--ctp-mantle) !important;
-    border-color: var(--ctp-surface0) !important;
-}
-
-[class*="row"]:hover, [class*="item"]:hover {
-    background-color: var(--ctp-surface0) !important;
-}
-
-/* Text Overrides */
-h1, h2, h3, h4, h5, span, div, a, p {
     color: var(--ctp-text) !important;
 }
 
-[class*="secondary"], [class*="subtitle"], [class*="artistName"], [class*="duration"] {
-    color: var(--ctp-subtext0) !important;
+/* Sidebar Specific */
+aside#sidebar, [class*="_sidebar_"], [class*="_fixedNavigation_"] {
+    background-color: var(--ctp-mantle) !important;
 }
 
-/* Selection & Focus */
-::selection {
-    background-color: var(--ctp-surface2);
-    color: var(--ctp-text);
+/* Footer Player */
+#footerPlayer, [class*="_player_"], [class*="_playerBar_"] {
+    background-color: var(--ctp-crust) !important;
+}
+
+/* Now Playing View & Gradients Fix */
+#nowPlaying, [data-test="now-playing"], [class*="_nowPlayingContainer_"] {
+    background-color: var(--ctp-base) !important;
+    background-image: none !important;
 }
 
 /* Scrollbars */
@@ -95,19 +94,35 @@ h1, h2, h3, h4, h5, span, div, a, p {
 ::-webkit-scrollbar-thumb { background: var(--ctp-surface1); border-radius: 5px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--ctp-surface2); }
 
-/* Buttons */
-button[class*="primary"], [class*="playButton"] {
-    background-color: var(--ctp-blue) !important;
-    color: var(--ctp-base) !important;
-}
-
-/* Search Bar Fix */
-[class*="search"], input {
+/* Context Menus */
+[data-test="contextmenu"], [class*="_contextMenu_"], [class*="_subMenu_"] {
     background-color: var(--ctp-surface0) !important;
     border: 1px solid var(--ctp-surface1) !important;
+}
+
+/* Cards & Rows */
+[class*="_card_"], [class*="_rowContainer_"], [class*="_actionItem_"] {
+    background-color: transparent !important;
+}
+[class*="_rowContainer_"]:hover, [class*="_actionItem_"]:hover {
+    background-color: var(--ctp-surface0) !important;
+}
+
+/* Active/Selected states */
+[class*="_selected_"], [class*="_activeTab_"] {
+    color: var(--ctp-blue) !important;
+    border-bottom-color: var(--ctp-blue) !important;
+}
+
+/* Search Bar */
+[class*="_searchField_"] {
+    background-color: var(--ctp-mantle) !important;
+    border-radius: 8px !important;
+}
+input {
     color: var(--ctp-text) !important;
 }
 `;
 
-new StyleTag("catppuccin-mocha-theme", unloads, catppuccinMochaCss);
-trace.msg.log("Catppuccin Mocha v1.6.4 applied!");
+new StyleTag("catppuccin-mocha-theme-v2", unloads, catppuccinMochaCss);
+trace.msg.log("Catppuccin Mocha Engine Overwrite Applied!");
