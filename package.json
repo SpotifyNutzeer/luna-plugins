@@ -1,7 +1,11 @@
 {
-	"name": "@luna/template",
-	"description": "Template repo for making your own luna plugins",
+	"name": "luna-plugins",
+	"description": "Custom plugins for Tidal Luna by SpotifyNutzer",
 	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SpotifyNutzeer/luna-plugins.git"
+	},
 	"scripts": {
 		"watch": "concurrently \"pnpm:build --watch\" pnpm:serve",
 		"build": "rimraf ./dist && tsx esbuild.config.ts",

@@ -41,6 +41,8 @@ importers:
 
   plugins/Example: {}
 
+  plugins/LinkCopy: {}
+
 packages:
 
   '@esbuild/aix-ppc64@0.25.5':
