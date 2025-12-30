@@ -107,31 +107,46 @@ input {
 }
 
 /* Headers and Titles within Menus */
-[class*="_header_"], [class*="_titleGroup_"], [class*="_infoHeader_"] {
+[class*="_contextMenu_"] [class*="_header_"],
+[class*="_infoHeader_"] {
     background-color: transparent !important;
     border-bottom: 1px solid var(--ctp-surface0) !important;
-    margin-bottom: 4px !important;
+    margin-bottom: 8px !important;
     padding-bottom: 8px !important;
+    display: flex !important;
+    align-items: center !important;
 }
 
-[class*="_title_"], [class*="_infoTitle_"] {
+[class*="_titleGroup_"] {
+    margin-left: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 2px !important;
+}
+
+[class*="_title_"] {
     color: var(--ctp-text) !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
 }
 
-[class*="_subTitle_"], [class*="_infoSubTitle_"] {
-    color: var(--ctp-subtext0) !important;
-}
-
-/* Icons & SVGs in Menus */
-[class*="_icon_"], [class*="_extraIcon_"] svg, [class*="_subMenuIcon_"] svg {
-    fill: var(--ctp-text) !important;
+[class*="_infoTitle_"] {
     color: var(--ctp-text) !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
 }
 
-/* Divider/Recent section in submenus */
-[class*="_lastUsedText_"] {
+[class*="_subTitle_"] {
     color: var(--ctp-subtext0) !important;
-    background-color: transparent !important;
+    font-size: 0.9em !important;
+    line-height: 1.2 !important;
+}
+
+[class*="_infoSubTitle_"] {
+    color: var(--ctp-subtext0) !important;
+    font-size: 0.9em !important;
+    line-height: 1.2 !important;
 }
 `;
 
