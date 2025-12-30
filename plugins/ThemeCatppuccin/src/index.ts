@@ -148,6 +148,65 @@ input {
     font-size: 0.9em !important;
     line-height: 1.2 !important;
 }
+
+/* 9. Now Playing Screen */
+[class*="_nowPlayingContainer_"], [id="nowPlaying"], [class*="_innerContainer_"] {
+    background-color: var(--ctp-base) !important;
+}
+
+/* Remove Tidal's radial gradients */
+#main[style*="background"], [class*="_main_"][style*="background"] {
+    background: var(--ctp-base) !important;
+}
+
+/* Tabs in Now Playing */
+[class*="_tabs_"] {
+    border-bottom: 1px solid var(--ctp-surface0) !important;
+    background-color: transparent !important;
+}
+
+[class*="_tabItem_"] {
+    color: var(--ctp-subtext0) !important;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+[class*="_tabItem_"][class*="_activeTab_"] {
+    color: var(--ctp-text) !important;
+    border-bottom: 2px solid var(--ctp-blue) !important;
+}
+
+/* Play Queue Items */
+[data-test="playqueue-item"] {
+    background-color: transparent !important;
+    border-radius: 8px !important;
+    margin: 0 4px !important;
+}
+
+[data-test="playqueue-item"]:hover {
+    background-color: var(--ctp-surface0) !important;
+}
+
+/* Titles and links in Now Playing screen */
+[class*="_nowPlayingContainer_"] [class*="_titleText_"],
+[class*="_nowPlayingContainer_"] [class*="_title_"] {
+    color: var(--ctp-text) !important;
+}
+
+[class*="_nowPlayingContainer_"] [class*="_subTitleText_"] a,
+[class*="_nowPlayingContainer_"] [class*="_descriptionText_"] a {
+    color: var(--ctp-subtext0) !important;
+}
+
+/* Buttons in Now Playing */
+[class*="_nowPlayingContainer_"] button:not([class*="_playButton_"]) {
+    color: var(--ctp-text) !important;
+}
+
+[class*="_nowPlayingContainer_"] button:hover:not([class*="_playButton_"]) {
+    background-color: var(--ctp-surface0) !important;
+    border-radius: 8px !important;
+}
 `;
 
 new StyleTag("catppuccin-mocha-theme-v5", unloads, catppuccinMochaCss);
