@@ -169,11 +169,22 @@ input {
     color: var(--ctp-subtext0) !important;
     background-color: transparent !important;
     border: none !important;
+    box-shadow: none !important;
+}
+
+[class*="_tabItem_"] span {
+    color: inherit !important;
 }
 
 [class*="_tabItem_"][class*="_activeTab_"] {
     color: var(--ctp-text) !important;
     border-bottom: 2px solid var(--ctp-blue) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+[class*="_tabItem_"][class*="_activeTab_"] span {
+    color: var(--ctp-text) !important;
 }
 
 /* Play Queue Items */
