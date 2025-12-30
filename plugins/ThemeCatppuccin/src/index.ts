@@ -84,6 +84,55 @@ h1, h2, h3, h4, span, div, a, p {
 input {
     color: var(--ctp-text) !important;
 }
+
+/* 8. Context Menus & Popovers */
+[class*="_contextMenu_"], [class*="_subMenu_"], [class*="_popover_"] {
+    background-color: var(--ctp-mantle) !important;
+    border: 1px solid var(--ctp-surface0) !important;
+    border-radius: 12px !important;
+    padding: 8px !important;
+}
+
+/* Menu Items & Buttons */
+[class*="_actionItem_"], [class*="_actionText_"], [role="menuitem"] {
+    background-color: transparent !important;
+    color: var(--ctp-text) !important;
+    border-radius: 6px !important;
+}
+
+[class*="_actionItem_"]:hover, [class*="_actionText_"]:hover, [role="menuitem"]:hover,
+[class*="_actionText_"]:focus, [role="menuitem"]:focus {
+    background-color: var(--ctp-surface0) !important;
+    color: var(--ctp-text) !important;
+}
+
+/* Headers and Titles within Menus */
+[class*="_header_"], [class*="_titleGroup_"], [class*="_infoHeader_"] {
+    background-color: transparent !important;
+    border-bottom: 1px solid var(--ctp-surface0) !important;
+    margin-bottom: 4px !important;
+    padding-bottom: 8px !important;
+}
+
+[class*="_title_"], [class*="_infoTitle_"] {
+    color: var(--ctp-text) !important;
+}
+
+[class*="_subTitle_"], [class*="_infoSubTitle_"] {
+    color: var(--ctp-subtext0) !important;
+}
+
+/* Icons & SVGs in Menus */
+[class*="_icon_"], [class*="_extraIcon_"] svg, [class*="_subMenuIcon_"] svg {
+    fill: var(--ctp-text) !important;
+    color: var(--ctp-text) !important;
+}
+
+/* Divider/Recent section in submenus */
+[class*="_lastUsedText_"] {
+    color: var(--ctp-subtext0) !important;
+    background-color: transparent !important;
+}
 `;
 
 new StyleTag("catppuccin-mocha-theme-v5", unloads, catppuccinMochaCss);
