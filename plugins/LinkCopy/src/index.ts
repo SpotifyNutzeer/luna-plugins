@@ -1,48 +1,65 @@
-import { LunaUnload, Tracer } from "@luna/core";
+import { LunaUnload, Tracer, ReactiveStore } from "@luna/core";
 import { MediaItem, ContextMenu, MediaItems, redux } from "@luna/lib";
 
 export const { trace } = Tracer("[LinkCopy]");
 export const unloads = new Set<LunaUnload>();
 
+export const storage = await ReactiveStore.getPluginStorage("LinkCopy", {
+    backendUrl: "https://linkhop.paul.wtf",
+});
+
+const DEFAULT_BACKEND = "https://linkhop.paul.wtf";
+const TARGETS = "spotify,deezer";
+
+type TargetResult = { status: string; url: string | null };
+type Targets = Record<string, TargetResult | undefined>;
+
 let lastTrackId: string | null = null;
-let currentTrackCache: { id: string, links: any } | null = null;
+let currentTrackCache: { id: string; backendUrl: string; targets: Targets } | null = null;
 
-async function getLinks(url: string, trackId: string) {
-    // Return cached links if it's the same track
-    if (currentTrackCache && currentTrackCache.id === trackId) {
-        console.log("[LinkCopy] Using cached links for track:", trackId);
-        return currentTrackCache.links;
-    }
+function backendBase(): string {
+    return (storage.backendUrl || DEFAULT_BACKEND).replace(/\/+$/, "");
+}
 
-    console.log("[LinkCopy] Fetching Odesli links for:", url);
+function notify(message: string, type: "INFO" | "WARN" = "INFO") {
+    redux.store.dispatch({
+        type: type === "WARN" ? "message/MESSAGE_WARN" : "message/MESSAGE_INFO",
+        payload: { message },
+    });
+}
+
+async function fetchLinks(url: string, base: string): Promise<Targets | null> {
+    const endpoint = `${base}/api/v1/convert?url=${encodeURIComponent(url)}&targets=${TARGETS}`;
     try {
-        const response = await fetch(`https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(url)}`);
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+            console.error("[LinkCopy] linkhop request failed:", response.status);
+            return null;
+        }
         const data = await response.json();
-        return data.linksByPlatform;
+        return data.targets ?? null;
     } catch (err) {
-        console.error("[LinkCopy] Odesli fetch failed:", err);
+        console.error("[LinkCopy] linkhop fetch failed:", err);
         return null;
     }
 }
 
-// Prefetch for currently playing track
-MediaItem.onMediaTransition(unloads, async (mediaItem) => {
-    try {
-        const id = mediaItem.id;
-        const url = `https://listen.tidal.com/track/${id}`;
-        console.log("[LinkCopy] Prefetching links for playing track:", id);
-        
-        const response = await fetch(`https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(url)}`);
-        const data = await response.json();
-        
-        currentTrackCache = {
-            id: id,
-            links: data.linksByPlatform
-        };
-        console.log("[LinkCopy] Prefetch complete.");
-    } catch (err) {
-        console.error("[LinkCopy] Prefetch failed:", err);
+async function getLinks(url: string, trackId: string) {
+    const base = backendBase();
+    if (currentTrackCache && currentTrackCache.id === trackId && currentTrackCache.backendUrl === base) {
+        return currentTrackCache.targets;
     }
+    const targets = await fetchLinks(url, base);
+    if (targets) currentTrackCache = { id: trackId, backendUrl: base, targets };
+    return targets;
+}
+
+MediaItem.onMediaTransition(unloads, async (mediaItem) => {
+    const id = mediaItem.id;
+    const url = `https://listen.tidal.com/track/${id}`;
+    const base = backendBase();
+    const targets = await fetchLinks(url, base);
+    if (targets) currentTrackCache = { id, backendUrl: base, targets };
 });
 
 function copyToClipboard(text: string, platform: string) {
@@ -52,11 +69,8 @@ function copyToClipboard(text: string, platform: string) {
     textArea.select();
     document.execCommand('copy');
     document.body.removeChild(textArea);
-    
-    redux.store.dispatch({
-        type: "message/MESSAGE_INFO",
-        payload: { message: `${platform} link copied to clipboard!` }
-    });
+
+    notify(`${platform} link copied to clipboard!`);
 }
 
 function createClonedButton(originalLi: HTMLElement, text: string, onClick: () => void) {
@@ -77,54 +91,54 @@ function createClonedButton(originalLi: HTMLElement, text: string, onClick: () =
     return newLi;
 }
 
-// 1. Capture ID on right-click
 ContextMenu.onMediaItem(unloads, async ({ mediaCollection }) => {
     try {
         const items = (mediaCollection as any).items || (mediaCollection as any).tMediaItems;
         if (items && items.length > 0) {
             const firstItem = items[0];
             lastTrackId = firstItem.id || firstItem.item?.id;
-            console.log("[LinkCopy] Context track set to:", lastTrackId);
         }
     } catch (err) {}
 });
 
-// 2. Share menu injection
-const checkInterval = setInterval(() => {
+function injectShareButtons() {
     const shareBtn = document.querySelector('[data-test="copy-share-link"]');
-    if (shareBtn && lastTrackId) {
-        const originalLi = shareBtn.closest('li');
-        const parentUl = originalLi?.parentElement;
+    if (!shareBtn || !lastTrackId) return;
+    const originalLi = shareBtn.closest('li');
+    const parentUl = originalLi?.parentElement;
+    if (!originalLi || !parentUl) return;
+    if (parentUl.querySelector('[data-link-copy-injected="true"]')) return;
 
-        if (originalLi && parentUl && !parentUl.querySelector('[data-link-copy-injected="true"]')) {
-            const id = lastTrackId!;
-            const url = `https://listen.tidal.com/track/${id}`;
+    const id = lastTrackId;
+    const url = `https://listen.tidal.com/track/${id}`;
 
-            parentUl.appendChild(createClonedButton(originalLi, "Copy Spotify Link", async () => {
-                const links = await getLinks(url, id);
-                if (links?.spotify?.url) copyToClipboard(links.spotify.url, "Spotify");
-                else alert("Spotify link not found.");
-            }));
+    parentUl.appendChild(createClonedButton(originalLi, "Copy Spotify Link", async () => {
+        const links = await getLinks(url, id);
+        if (links?.spotify?.url) copyToClipboard(links.spotify.url, "Spotify");
+        else notify("Spotify link not found.", "WARN");
+    }));
 
-            parentUl.appendChild(createClonedButton(originalLi, "Copy YouTube Link", async () => {
-                const links = await getLinks(url, id);
-                if (links?.youtube?.url) copyToClipboard(links.youtube.url, "YouTube");
-                else alert("YouTube link not found.");
-            }));
-        }
-    }
-}, 300);
+    parentUl.appendChild(createClonedButton(originalLi, "Copy Deezer Link", async () => {
+        const links = await getLinks(url, id);
+        if (links?.deezer?.url) copyToClipboard(links.deezer.url, "Deezer");
+        else notify("Deezer link not found.", "WARN");
+    }));
+}
 
-unloads.add(() => clearInterval(checkInterval));
+const shareObserver = new MutationObserver(injectShareButtons);
+shareObserver.observe(document.body, { childList: true, subtree: true });
+unloads.add(() => shareObserver.disconnect());
 
 export { Settings } from "./Settings";
 
-export async function copyCurrentLink(platform: 'spotify' | 'youtube') {
+export async function copyCurrentLink(platform: 'spotify' | 'deezer') {
     const mediaItem = await MediaItem.fromPlaybackContext();
     if (!mediaItem) return;
     const id = mediaItem.id;
     const url = `https://listen.tidal.com/track/${id}`;
     const links = await getLinks(url, id);
     const link = links?.[platform]?.url;
-    if (link) copyToClipboard(link, platform);
+    const label = platform === 'spotify' ? 'Spotify' : 'Deezer';
+    if (link) copyToClipboard(link, label);
+    else notify(`${label} link not found.`, "WARN");
 }

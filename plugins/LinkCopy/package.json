@@ -1,6 +1,6 @@
 {
 	"name": "@spotifynutzeer/link-copy",
-	"description": "Easily copy Spotify and YouTube links for the current song",
+	"description": "Easily copy Spotify and Deezer links for the current song via linkhop",
 	"author": {
 		"name": "SpotifyNutzer",
 		"url": "https://github.com/SpotifyNutzeer"
