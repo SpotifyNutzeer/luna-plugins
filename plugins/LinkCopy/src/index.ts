@@ -14,7 +14,6 @@ const TARGETS = "spotify,deezer";
 type TargetResult = { status: string; url: string | null };
 type Targets = Record<string, TargetResult | undefined>;
 
-let lastTrackId: string | null = null;
 let currentTrackCache: { id: string; backendUrl: string; targets: Targets } | null = null;
 
 function backendBase(): string {
@@ -55,7 +54,7 @@ async function getLinks(url: string, trackId: string) {
 }
 
 MediaItem.onMediaTransition(unloads, async (mediaItem) => {
-    const id = mediaItem.id;
+    const id = String(mediaItem.id);
     const url = `https://listen.tidal.com/track/${id}`;
     const base = backendBase();
     const targets = await fetchLinks(url, base);
@@ -91,50 +90,41 @@ function createClonedButton(originalLi: HTMLElement, text: string, onClick: () =
     return newLi;
 }
 
-ContextMenu.onMediaItem(unloads, async ({ mediaCollection }) => {
-    try {
-        const items = (mediaCollection as any).items || (mediaCollection as any).tMediaItems;
-        if (items && items.length > 0) {
-            const firstItem = items[0];
-            lastTrackId = firstItem.id || firstItem.item?.id;
-        }
-    } catch (err) {}
-});
+ContextMenu.onMediaItem(unloads, async ({ mediaCollection, contextMenu }) => {
+    const tMediaItems = (mediaCollection as any).tMediaItems;
+    if (!Array.isArray(tMediaItems) || tMediaItems.length === 0) return;
+    const id = tMediaItems[0]?.item?.id;
+    if (id === undefined || id === null) return;
 
-function injectShareButtons() {
-    const shareBtn = document.querySelector('[data-test="copy-share-link"]');
-    if (!shareBtn || !lastTrackId) return;
-    const originalLi = shareBtn.closest('li');
+    const trackId = String(id);
+    const url = `https://listen.tidal.com/track/${trackId}`;
+
+    const handleClick = async (platform: 'spotify' | 'deezer', label: string) => {
+        const links = await getLinks(url, trackId);
+        const link = links?.[platform]?.url;
+        if (link) copyToClipboard(link, label);
+        else notify(`${label} link not found.`, "WARN");
+    };
+
+    const shareBtn = contextMenu.querySelector('[data-test="copy-share-link"]');
+    const originalLi = shareBtn?.closest('li');
     const parentUl = originalLi?.parentElement;
-    if (!originalLi || !parentUl) return;
-    if (parentUl.querySelector('[data-link-copy-injected="true"]')) return;
 
-    const id = lastTrackId;
-    const url = `https://listen.tidal.com/track/${id}`;
-
-    parentUl.appendChild(createClonedButton(originalLi, "Copy Spotify Link", async () => {
-        const links = await getLinks(url, id);
-        if (links?.spotify?.url) copyToClipboard(links.spotify.url, "Spotify");
-        else notify("Spotify link not found.", "WARN");
-    }));
-
-    parentUl.appendChild(createClonedButton(originalLi, "Copy Deezer Link", async () => {
-        const links = await getLinks(url, id);
-        if (links?.deezer?.url) copyToClipboard(links.deezer.url, "Deezer");
-        else notify("Deezer link not found.", "WARN");
-    }));
-}
-
-const shareObserver = new MutationObserver(injectShareButtons);
-shareObserver.observe(document.body, { childList: true, subtree: true });
-unloads.add(() => shareObserver.disconnect());
+    if (originalLi && parentUl) {
+        parentUl.appendChild(createClonedButton(originalLi as HTMLElement, "Copy Spotify Link", () => handleClick('spotify', 'Spotify')));
+        parentUl.appendChild(createClonedButton(originalLi as HTMLElement, "Copy Deezer Link", () => handleClick('deezer', 'Deezer')));
+    } else {
+        contextMenu.addButton("Copy Spotify Link", () => handleClick('spotify', 'Spotify'));
+        contextMenu.addButton("Copy Deezer Link", () => handleClick('deezer', 'Deezer'));
+    }
+});
 
 export { Settings } from "./Settings";
 
 export async function copyCurrentLink(platform: 'spotify' | 'deezer') {
     const mediaItem = await MediaItem.fromPlaybackContext();
     if (!mediaItem) return;
-    const id = mediaItem.id;
+    const id = String(mediaItem.id);
     const url = `https://listen.tidal.com/track/${id}`;
     const links = await getLinks(url, id);
     const link = links?.[platform]?.url;
