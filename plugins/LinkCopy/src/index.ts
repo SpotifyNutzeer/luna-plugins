@@ -9,7 +9,7 @@ export const storage = await ReactiveStore.getPluginStorage("LinkCopy", {
 });
 
 const DEFAULT_BACKEND = "https://linkhop.paul.wtf";
-const TARGETS = "spotify,deezer";
+const TARGETS = "spotify,deezer,youtube_music";
 
 type TargetResult = { status: string; url: string | null };
 type Targets = Record<string, TargetResult | undefined>;
@@ -99,7 +99,7 @@ ContextMenu.onMediaItem(unloads, async ({ mediaCollection, contextMenu }) => {
     const trackId = String(id);
     const url = `https://listen.tidal.com/track/${trackId}`;
 
-    const handleClick = async (platform: 'spotify' | 'deezer', label: string) => {
+    const handleClick = async (platform: 'spotify' | 'deezer' | 'youtube_music', label: string) => {
         const links = await getLinks(url, trackId);
         const link = links?.[platform]?.url;
         if (link) copyToClipboard(link, label);
@@ -113,22 +113,30 @@ ContextMenu.onMediaItem(unloads, async ({ mediaCollection, contextMenu }) => {
     if (originalLi && parentUl) {
         parentUl.appendChild(createClonedButton(originalLi as HTMLElement, "Copy Spotify Link", () => handleClick('spotify', 'Spotify')));
         parentUl.appendChild(createClonedButton(originalLi as HTMLElement, "Copy Deezer Link", () => handleClick('deezer', 'Deezer')));
+        parentUl.appendChild(createClonedButton(originalLi as HTMLElement, "Copy YouTube Music Link", () => handleClick('youtube_music', 'YouTube Music')));
     } else {
         contextMenu.addButton("Copy Spotify Link", () => handleClick('spotify', 'Spotify'));
         contextMenu.addButton("Copy Deezer Link", () => handleClick('deezer', 'Deezer'));
+        contextMenu.addButton("Copy YouTube Music Link", () => handleClick('youtube_music', 'YouTube Music'));
     }
 });
 
 export { Settings } from "./Settings";
 
-export async function copyCurrentLink(platform: 'spotify' | 'deezer') {
+const PLATFORM_LABELS: Record<'spotify' | 'deezer' | 'youtube_music', string> = {
+    spotify: 'Spotify',
+    deezer: 'Deezer',
+    youtube_music: 'YouTube Music',
+};
+
+export async function copyCurrentLink(platform: 'spotify' | 'deezer' | 'youtube_music') {
     const mediaItem = await MediaItem.fromPlaybackContext();
     if (!mediaItem) return;
     const id = String(mediaItem.id);
     const url = `https://listen.tidal.com/track/${id}`;
     const links = await getLinks(url, id);
     const link = links?.[platform]?.url;
-    const label = platform === 'spotify' ? 'Spotify' : 'Deezer';
+    const label = PLATFORM_LABELS[platform];
     if (link) copyToClipboard(link, label);
     else notify(`${label} link not found.`, "WARN");
 }

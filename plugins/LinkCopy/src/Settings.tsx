@@ -22,6 +22,11 @@ export const Settings = () => {
 				desc="Copy the Deezer link for the currently playing track"
 				onClick={() => copyCurrentLink('deezer')}
 			/>
+			<LunaButtonSetting
+				title="Copy YouTube Music Link"
+				desc="Copy the YouTube Music link for the currently playing track"
+				onClick={() => copyCurrentLink('youtube_music')}
+			/>
 		</LunaSettings>
 	);
 };
